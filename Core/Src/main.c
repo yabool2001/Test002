@@ -22,7 +22,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include <string.h>
+#include <stdio.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -43,7 +44,10 @@
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
-uint8_t uart_rx_buff[1];
+uint8_t uart_tx_buff[5];
+uint8_t uart_rx_buff[] = { 65 , 66 , 67 } ;
+size_t s ;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -51,7 +55,7 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN PFP */
-
+static void print_uart_rx_buff ( void ) ;
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -66,7 +70,7 @@ static void MX_USART2_UART_Init(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+	  s = strlen ( uart_rx_buff ) ;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -89,13 +93,16 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-  HAL_UART_Receive_IT ( &huart2 , uart_rx_buff , 1 ) ;
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  HAL_UART_Receive_IT ( &huart2 , uart_rx_buff , (uint16_t)s ) ;
+	  HAL_Delay ( 5000 ) ;
+	  print_uart_rx_buff () ;
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -192,6 +199,15 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 
+static void print_uart_rx_buff ( void )
+{
+	sprintf ( (char*)uart_tx_buff , "%s\r\n" , (const char*)uart_rx_buff) ;
+	HAL_UART_Transmit ( &huart2 , uart_tx_buff, strlen ( (const char*)uart_tx_buff) , 100 ) ;
+}
+void HAL_UART_RxCpltCallback ( UART_HandleTypeDef *huart )
+{
+	print_uart_rx_buff () ;
+}
 /* USER CODE END 4 */
 
 /**
