@@ -1009,9 +1009,9 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
  80006e2:	187b      	adds	r3, r7, r1
  80006e4:	2202      	movs	r2, #2
  80006e6:	605a      	str	r2, [r3, #4]
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Pull = GPIO_PULLUP;
  80006e8:	187b      	adds	r3, r7, r1
- 80006ea:	2200      	movs	r2, #0
+ 80006ea:	2201      	movs	r2, #1
  80006ec:	609a      	str	r2, [r3, #8]
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
  80006ee:	187b      	adds	r3, r7, r1
